@@ -1,0 +1,79 @@
+#include <stdarg.h>
+#include <stdio.h>
+
+int print_flags(va_list val, char flag)
+{
+    int counter = 0;
+
+    switch (flag)
+    {
+    case '+':
+        counter += print_plus(val);
+        break;
+    case ' ':
+        counter += print_space(val);
+        break;
+    case '#':
+        counter += print_hash(val);
+        break;
+    default:
+        putchar('%');
+        counter++;
+        break;
+    }
+
+    return (counter);
+}
+
+int print_plus(va_list val)
+{
+    putchar('+');
+    return (1);
+}
+
+int print_space(va_list val)
+{
+    putchar(' ');
+    return (1);
+}
+
+int print_hash(va_list val)
+{
+    putchar('#');
+    return (1);
+}
+
+int custom_printf(const char *format, ...)
+{
+    va_list val;
+    int i, counter = 0;
+
+    va_start(val, format);
+
+    for (i = 0; format[i]; i++)
+    {
+        if (format[i] == '%')
+        {
+            char flag = format[++i];
+
+            if (flag == '%')
+            {
+                putchar('%');
+                counter++;
+            }
+            else
+            {
+                counter += print_flags(val, flag);
+            }
+        }
+        else
+        {
+            putchar(format[i]);
+            counter++;
+        }
+    }
+
+    va_end(val);
+
+    return (counter);
+}
